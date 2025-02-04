@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../lib/octicons_helper/version", __FILE__)
 
 Gem::Specification.new do |s|
@@ -13,7 +15,7 @@ Gem::Specification.new do |s|
 
   s.require_paths = ["lib"]
 
-  s.add_dependency "octicons", "17.9.0"
+  s.add_dependency "octicons", "19.9.0"
   s.add_dependency "railties"
   s.add_dependency "actionview"
 end

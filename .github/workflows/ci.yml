@@ -9,15 +9,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 18
       - run: yarn
       - name: Building
         run: yarn build
       - run: cp -r icons lib/build/svg
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: octicons-build
           path: ./lib/build
@@ -27,11 +27,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: 14
-      - uses: actions/download-artifact@v2
+          node-version: 18
+      - uses: actions/download-artifact@v4
         with:
           name: octicons-build
           path: ./lib/build
@@ -49,11 +49,11 @@ jobs:
       run:
         working-directory: ./lib/octicons_node
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: 14
-      - uses: actions/download-artifact@v2
+          node-version: 18
+      - uses: actions/download-artifact@v4
         with:
           name: octicons-build
           path: ./lib/build
@@ -73,11 +73,11 @@ jobs:
       run:
         working-directory: ./lib/octicons_react
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: 14
-      - uses: actions/download-artifact@v2
+          node-version: 18
+      - uses: actions/download-artifact@v4
         with:
           name: octicons-build
           path: ./lib/build
@@ -88,6 +88,13 @@ jobs:
         run: yarn lint
       - name: Test
         run: yarn test
+      - name: Types
+        run: |
+          # Run @arethetypeswrong/cli
+          npx @arethetypeswrong/cli --pack .
+
+          # Run publint
+          npx publint@0.2.12 . --strict
 
   octicons_gem:
     name: 'gem:octicons'
@@ -97,26 +104,27 @@ jobs:
       run:
         working-directory: ./lib/octicons_gem
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup Ruby
-      uses: actions/setup-ruby@v1
-      with:
-        ruby-version: 2.7
-    - uses: actions/download-artifact@v2
-      with:
-        name: octicons-build
-        path: ./lib/octicons_gem/lib/build
-    - run: bundle install
-    - name: Linting
-      run: bundle exec rake lint
-    - name: Testing
-      run: bundle exec rake test
-    - name: Build
-      run: bundle exec rake build
-    - uses: actions/upload-artifact@master
-      with:
-        name: octicons-gem
-        path: ./lib/octicons_gem/pkg
+      - uses: actions/checkout@v3
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3
+          bundler-cache: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: octicons-build
+          path: ./lib/octicons_gem/lib/build
+      - run: bundle install
+      - name: Linting
+        run: bundle exec rake lint
+      - name: Testing
+        run: bundle exec rake test
+      - name: Build
+        run: bundle exec rake build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: octicons-gem
+          path: ./lib/octicons_gem/pkg
 
   octicons_helper:
     name: 'gem:octicons_helper'
@@ -126,20 +134,22 @@ jobs:
       run:
         working-directory: ./lib/octicons_helper
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup Ruby
-      uses: actions/setup-ruby@v1
-      with:
-        ruby-version: 2.7
-    - uses: actions/download-artifact@v2
-      with:
-        name: octicons-gem
-        path: ./lib/octicons_helper/vendor/cache
-    - run: bundle install
-    - name: Linting
-      run: bundle exec rake lint
-    - name: Testing
-      run: bundle exec rake test
+      - uses: actions/checkout@v3
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3
+          bundler-cache: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: octicons-gem
+          path: ./lib/octicons_helper/vendor/cache
+      - name: Run bundle install
+        run: bundle config set --local disable_checksum_validation true && bundle install
+      - name: Linting
+        run: bundle exec rake lint
+      - name: Testing
+        run: bundle exec rake test
 
   octicons_jekyll:
     name: 'gem:octicons_jekyll'
@@ -149,17 +159,19 @@ jobs:
       run:
         working-directory: ./lib/octicons_jekyll
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup Ruby
-      uses: actions/setup-ruby@v1
-      with:
-        ruby-version: 2.7
-    - uses: actions/download-artifact@v2
-      with:
-        name: octicons-gem
-        path: ./lib/octicons_jekyll/vendor/cache
-    - run: bundle install
-    - name: Linting
-      run: bundle exec rake lint
-    - name: Testing
-      run: bundle exec rake test
+      - uses: actions/checkout@v3
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3
+          bundler-cache: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: octicons-gem
+          path: ./lib/octicons_jekyll/vendor/cache
+      - name: Run bundle install
+        run: bundle config set --local disable_checksum_validation true && bundle install
+      - name: Linting
+        run: bundle exec rake lint
+      - name: Testing
+        run: bundle exec rake test

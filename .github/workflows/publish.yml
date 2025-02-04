@@ -1,6 +1,7 @@
 on:
   release:
     types: [published]
+  workflow_dispatch:
 name: Octicons Publish
 jobs:
   setup:
@@ -9,11 +10,11 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-node@master
         with:
-          node-version: '10.x'
+          node-version: '18.x'
       - run: npm install
       - run: npm run build
       - run: cp -r icons lib/build/svg
-      - uses: actions/upload-artifact@master
+      - uses: actions/upload-artifact@v4
         with:
           name: octicons
           path: ./lib/build
@@ -22,7 +23,7 @@ jobs:
     needs: setup
     steps:
       - uses: actions/checkout@master
-      - uses: actions/download-artifact@master
+      - uses: actions/download-artifact@v4
         with:
           name: octicons
           path: ./lib/build
@@ -32,7 +33,7 @@ jobs:
         with:
           args: octicons_gem
       - run: ls ./lib/octicons_gem/pkg
-      - uses: actions/upload-artifact@master
+      - uses: actions/upload-artifact@v4
         with:
           name: octicons_gem
           path: ./lib/octicons_gem/pkg
@@ -41,11 +42,11 @@ jobs:
     needs: gem
     steps:
       - uses: actions/checkout@master
-      - uses: actions/download-artifact@master
+      - uses: actions/download-artifact@v4
         with:
           name: octicons
           path: ./lib/build
-      - uses: actions/download-artifact@master
+      - uses: actions/download-artifact@v4
         with:
           name: octicons_gem
           path: ./lib/octicons_helper/vendor/cache
@@ -59,11 +60,11 @@ jobs:
     needs: gem
     steps:
       - uses: actions/checkout@master
-      - uses: actions/download-artifact@master
+      - uses: actions/download-artifact@v4
         with:
           name: octicons
           path: ./lib/build
-      - uses: actions/download-artifact@master
+      - uses: actions/download-artifact@v4
         with:
           name: octicons_gem
           path: ./lib/octicons_jekyll/vendor/cache
@@ -77,13 +78,13 @@ jobs:
     needs: setup
     steps:
       - uses: actions/checkout@master
-      - uses: actions/download-artifact@master
+      - uses: actions/download-artifact@v4
         with:
           name: octicons
           path: ./lib/build
       - uses: ./.github/actions/build_node
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NPM_AUTH_TOKEN_SHARED: ${{ secrets.NPM_AUTH_TOKEN_SHARED }}
         with:
           args: octicons_node
   react:
@@ -91,19 +92,19 @@ jobs:
     needs: setup
     steps:
       - uses: actions/checkout@master
-      - uses: actions/download-artifact@master
+      - uses: actions/download-artifact@v4
         with:
           name: octicons
           path: ./lib/build
       - name: Build @primer/octicons-react
         uses: ./.github/actions/build_node
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NPM_AUTH_TOKEN_SHARED: ${{ secrets.NPM_AUTH_TOKEN_SHARED }}
         with:
           args: octicons_react
       - name: Build @primer/styled-octicons
         uses: ./.github/actions/build_node
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NPM_AUTH_TOKEN_SHARED: ${{ secrets.NPM_AUTH_TOKEN_SHARED }}
         with:
           args: octicons_styled
