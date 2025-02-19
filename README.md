@@ -42,11 +42,11 @@ The octicons node.js library is the main JavaScript library. With [a JavaScript 
 
 ### Feedback, ideas, and bug reports
 
-If you have feedback and ideas for improvement, open a new issue in this repo, using the appropriate [issue template](https://github.com/primer/octicons/issues/new/choose).
+If you found a bug, have feedback about our Octicon Library, or an idea on how to improve it, please open a new issue in this repo using the appropriate [issue template](https://github.com/primer/octicons/issues/new/choose).
 
 ### Request an Icon Review (GitHub staff only)
 
-To request an icon review for inclusion in the Octicons Library, open an issue using the [icon request](https://github.com/github/primer/issues/new?assignees=&labels=octicon%2C+request%2C+needs+triage&template=02-icon-request.md&title=%5BIcon+request%5D++) template in github/primer.
+To request an icon review for inclusion in the Octicons Library, open an issue using the [icon review request](https://github.com/github/primer/issues/new?assignees=&labels=octicon%2C+request%2C+needs+triage&template=03-icon-request.md&title=%5BIcon+request%5D+) template in github/primer.
 
 ### Adding or updating an icon
 
